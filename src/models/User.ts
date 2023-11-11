@@ -6,9 +6,10 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column()
+    @Column({unique: true})
+    userName: string;
 
-    @Column()
+    @Column({unique: true})
     email: string;
 
     @Column()
@@ -21,5 +22,5 @@ export class User extends BaseEntity {
     updatedAt: Date;
 
     @OneToMany(() => Todo, todo => todo.user )
-    todos?: Todo[];
+    todos: Todo[];
 }

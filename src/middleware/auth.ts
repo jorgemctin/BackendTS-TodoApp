@@ -1,8 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 
-interface AuthRequest extends Request {
-    user_id?: number;
+export interface AuthRequest extends Request {
+    userId?: number;
     userName?: string;
 }
 const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
@@ -21,10 +21,10 @@ const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
         const decoded: any = jwt.verify(token, 'secreto');
 
         // Aquí puedes acceder a las propiedades específicas de UserData
-        req.user_id = decoded.id;
+        req.userId = decoded.id;
         req.userName = decoded.userName;
 
-        console.log("req.user_id:", req.user_id);
+        console.log("req.userId:", req.userId);
 
         next();
     } catch (error: any) {

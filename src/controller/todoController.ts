@@ -1,23 +1,35 @@
 import { Request, Response } from 'express';
 import { Todo } from '../models/Todo';
+import { AuthRequest } from '../middleware/auth';
 
-export const getAllTodos = async (req: Request, res: Response) => {
-    try {
-        const todos = await Todo.find({ relations: ['user'] });
-        return res.status(200).json({ success: true, todos });
-    } catch (error) {
-        console.error('Error:', error);
-        return res.status(500).json({ success: false, error });
-    }
+export const getAllTodos = async (req: AuthRequest, res: Response) => {
+  try {
+    // Obtén el ID del usuario desde el token
+    const userId = req.userId;
+
+    // Consulta todos los ToDos del usuario con el ID obtenido
+    const todos = await Todo.find({ where: { userId } });
+
+    return res.status(200).json({
+      success: true,
+      todos,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    return res.status(500).json({
+      success: false,
+      error,
+    });
+  }
 };
 
 export const createTodo = async (req: Request, res: Response) => {
     try {
-        const { text, user_id } = req.body;
+        const { text, userId } = req.body;
 
         const newTodo = Todo.create({
             text,
-            user_id,
+            userId,
         });
 
         await newTodo.save();
@@ -32,17 +44,17 @@ export const createTodo = async (req: Request, res: Response) => {
 export const updateTodo = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { text, user_id } = req.body;
+        const { text, userId } = req.body;
 
         const todoId: number = parseInt(id, 10);
 
         let todo = await Todo.findOneOrFail({
             where: { id: todoId },
-            relations: ['user'],
+            relations: ['user']
         });
 
         todo.text = text || todo.text;
-        todo.user_id = user_id !== undefined ? user_id : todo.user_id;
+        todo.userId = userId !== undefined ? userId : todo.userId;
 
         await todo.save();
 

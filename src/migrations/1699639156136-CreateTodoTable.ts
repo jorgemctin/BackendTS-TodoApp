@@ -18,7 +18,7 @@ export class CreateTodoTable1699639156136 implements MigrationInterface {
                     type: "varchar",
                 },
                 {
-                    name: "user_id",
+                    name: "userId",
                     type: "int",
                 },
                 {
@@ -34,9 +34,9 @@ export class CreateTodoTable1699639156136 implements MigrationInterface {
             ],
         }), true);
 
-        // FEAT FOREING KEY TO "user_id".
+        // FEAT FOREING KEY TO "userId".
         await queryRunner.createForeignKey("todos", new TableForeignKey({
-            columnNames: ["user_id"],
+            columnNames: ["userId"],
             referencedColumnNames: ["id"],
             referencedTableName: "users",
             onDelete: "CASCADE",

@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "";
 export const register = async (req: Request, res: Response) => {
     
     try {
-        const { userName, email, password } = req.body as RegisterPayload;
+        const {  email, password } = req.body as RegisterPayload;
 
         const userFound = await User.findOne({ where: { email } } as FindOneOptions<User>);
 

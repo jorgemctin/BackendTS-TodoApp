@@ -5,6 +5,6 @@ import todoRoutes from './views/todoRoutes';
 const router = Router();
 
 router.use('/auth', authRoutes);
-router.use('/user', todoRoutes);
+router.use('/todo', todoRoutes);
 
 export default router;
