@@ -1,4 +1,4 @@
-import { MigrationInterface, QueryRunner, Table } from "typeorm";
+import { MigrationInterface, QueryRunner, Table, TableForeignKey } from "typeorm";
 
 export class CreateTodoTable1699639156136 implements MigrationInterface {
 
@@ -18,6 +18,10 @@ export class CreateTodoTable1699639156136 implements MigrationInterface {
                     type: "varchar",
                 },
                 {
+                    name: "user_id",
+                    type: "int",
+                },
+                {
                     name: "created_at",
                     type: "timestamp",
                     default: "CURRENT_TIMESTAMP",
@@ -29,6 +33,15 @@ export class CreateTodoTable1699639156136 implements MigrationInterface {
                 },
             ],
         }), true);
+
+        // FEAT FOREING KEY TO "user_id".
+        await queryRunner.createForeignKey("todos", new TableForeignKey({
+            columnNames: ["user_id"],
+            referencedColumnNames: ["id"],
+            referencedTableName: "users",
+            onDelete: "CASCADE",
+            onUpdate: "CASCADE",
+        }));
     }
 
     public async down(queryRunner: QueryRunner): Promise<void> {

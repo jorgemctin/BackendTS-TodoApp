@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany  } from "typeorm";
+import { Todo } from "./Todo";
 
 @Entity("users")
 export class User {
@@ -20,7 +21,11 @@ export class User {
     @UpdateDateColumn({ name: "updated_at" })
     updatedAt: Date;
 
-    constructor(id: number, username: string, email: string, password: string) {
+    @OneToMany(() => Todo, todo => todo.user )
+    todos?: Todo[];
+
+
+    constructor(id: number, username: string, email: string, password: string ) {
         this.id = id;
         this.username = username;
         this.email = email;
