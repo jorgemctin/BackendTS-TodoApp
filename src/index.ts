@@ -1,19 +1,14 @@
-import express from "express";
-// import "express-async-errors";
-
+import express from 'express';
 import { dataBase } from './db';
+import router from './router';
 
-require("dotenv").config();
-
+require('dotenv').config();
 
 const app = express();
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-    return res.json("Hi");
-});
-
+app.use(router);
 
 dataBase.initialize()
     .then(() => {

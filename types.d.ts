@@ -1,9 +1,8 @@
 export interface UserData {
     id: number;
-    name: string;
+    userName: string;
     email: string;
     password: string;
-    userName: string;
     createdAt: Date;
     updatedAt: Date;
 }
