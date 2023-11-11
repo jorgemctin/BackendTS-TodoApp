@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn,BaseEntity, ManyToOne } from "typeorm";
 import { User } from "./User";
 
 @Entity("todos")
-export class Todo {
+export class Todo extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -23,13 +23,4 @@ export class Todo {
     })
     
     user: User;
-
-    constructor(id: number, text: string, user_id: number, user: User) {
-        this.id = id;
-        this.text = text;
-        this.user_id = user_id;
-        this.user = user;
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
 }

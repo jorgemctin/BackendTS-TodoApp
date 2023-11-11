@@ -1,8 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, OneToMany  } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, OneToMany  } from "typeorm";
 import { Todo } from "./Todo";
 
 @Entity("users")
-export class User {
+export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
@@ -23,14 +23,4 @@ export class User {
 
     @OneToMany(() => Todo, todo => todo.user )
     todos?: Todo[];
-
-
-    constructor(id: number, username: string, email: string, password: string ) {
-        this.id = id;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
-    }
 }
