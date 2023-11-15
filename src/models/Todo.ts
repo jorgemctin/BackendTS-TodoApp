@@ -9,6 +9,9 @@ export class Todo extends BaseEntity {
     @Column()
     text: string;
 
+    @Column()
+    completed: boolean;
+
     @Column({ name: "userId" })
     userId: number;
 

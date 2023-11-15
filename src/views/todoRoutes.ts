@@ -5,9 +5,9 @@ import auth from "../middleware/auth";
 
 const router = Router();
 
-router.get("/getAll/:id",  getAllTodos);
-router.post("/create", createTodo);
-router.put("/update/:id", updateTodo);
-router.delete("/delete/:id",  deleteTodo);
+router.get("/getAll/:id", auth, getAllTodos);
+router.post("/create", auth, createTodo);
+router.put("/update/:id", auth, updateTodo);
+router.delete("/delete/:id", auth, deleteTodo);
 
 export default router;

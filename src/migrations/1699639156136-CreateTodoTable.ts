@@ -18,6 +18,11 @@ export class CreateTodoTable1699639156136 implements MigrationInterface {
                     type: "varchar",
                 },
                 {
+                    name: "completed",
+                    type: "boolean",  
+                    default: false,   
+                },
+                {
                     name: "userId",
                     type: "int",
                 },

@@ -3,33 +3,32 @@ import { Todo } from '../models/Todo';
 import { AuthRequest } from '../middleware/auth';
 
 export const getAllTodos = async (req: AuthRequest, res: Response) => {
-  try {
-    // Obtén el ID del usuario desde el token
-    const userId = req.userId;
+    try {
+        const userId = req.userId;
 
-    // Consulta todos los ToDos del usuario con el ID obtenido
-    const todos = await Todo.find({ where: { userId } });
+        const todos = await Todo.find({ where: { userId } });
 
-    return res.status(200).json({
-      success: true,
-      todos,
-    });
-  } catch (error) {
-    console.error("Error:", error);
-    return res.status(500).json({
-      success: false,
-      error,
-    });
-  }
+        return res.status(200).json({
+            success: true,
+            todos,
+        });
+    } catch (error) {
+        console.error("Error:", error);
+        return res.status(500).json({
+            success: false,
+            error,
+        });
+    }
 };
 
 export const createTodo = async (req: Request, res: Response) => {
     try {
-        const { text, userId } = req.body;
+        const { text, userId, completed } = req.body;
 
         const newTodo = Todo.create({
             text,
             userId,
+            completed: completed || false,
         });
 
         await newTodo.save();
@@ -44,7 +43,7 @@ export const createTodo = async (req: Request, res: Response) => {
 export const updateTodo = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
-        const { text, userId } = req.body;
+        const { text, userId, completed } = req.body;
 
         const todoId: number = parseInt(id, 10);
 
@@ -55,6 +54,7 @@ export const updateTodo = async (req: Request, res: Response) => {
 
         todo.text = text || todo.text;
         todo.userId = userId !== undefined ? userId : todo.userId;
+        todo.completed = completed !== undefined ? completed : todo.completed; // Actualiza el campo complete si está presente en la solicitud
 
         await todo.save();
 
@@ -69,7 +69,6 @@ export const deleteTodo = async (req: Request, res: Response) => {
     try {
         const { id } = req.params;
 
-        // Convertir el id a un número
         const todoId: number = parseInt(id, 10);
 
         const todo = await Todo.findOneOrFail({
