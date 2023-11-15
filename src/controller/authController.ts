@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User";
 import { Request, Response } from "express";
-import { RegisterPayload, LoginPayload } from "../../types";
+import { AuthPayload } from "../../types";
 import { FindOneOptions } from 'typeorm';
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
@@ -10,7 +10,7 @@ const JWT_SECRET = process.env.JWT_SECRET || "";
 export const register = async (req: Request, res: Response) => {
     
     try {
-        const {  email, password } = req.body as RegisterPayload;
+        const {  email, password } = req.body as AuthPayload;
 
         const userFound = await User.findOne({ where: { email } } as FindOneOptions<User>);
 
@@ -53,7 +53,7 @@ export const register = async (req: Request, res: Response) => {
 
 export const login = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body as LoginPayload;
+        const { email, password } = req.body as AuthPayload;
         if (!email || !password) {
             console.log("Datos de inicio de sesión incompletos.");
             return res.status(400).json({

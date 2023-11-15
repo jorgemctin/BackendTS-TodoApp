@@ -12,6 +12,10 @@
 
 Este proyecto consiste en desarrollar una API que brinde servicios de autenticación, registro y inicio de sesión para los usuarios. Además, ofrece operaciones CRUD (Crear, Leer, Actualizar, Eliminar) para gestionar tareas almacenadas en una tabla de "Todos".
 
+### Diagrama BD
+
+!['diagram'](./public/img/diagram.png)
+
 ### Instalación en local
 
 1. Clona el repositorio `$git clone 'url-repository'`

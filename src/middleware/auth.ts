@@ -20,7 +20,6 @@ const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
 
         const decoded: any = jwt.verify(token, 'secreto');
 
-        // Aquí puedes acceder a las propiedades específicas de UserData
         req.userId = decoded.id;
         req.userName = decoded.userName;
 
