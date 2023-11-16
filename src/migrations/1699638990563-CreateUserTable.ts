@@ -14,7 +14,7 @@ export class CreateUserTable1699638990563 implements MigrationInterface {
                     generationStrategy: "increment",
                 },
                 {
-                    name: "userName",
+                    name: "user_name",
                     type: "varchar",
                 },
                 {
@@ -24,6 +24,12 @@ export class CreateUserTable1699638990563 implements MigrationInterface {
                 {
                     name: "password",
                     type: "varchar",
+                },
+                {
+                    name: "role",
+                    type: "enum", 
+                    enum: ["user", "admin"],
+                    default: "'user'",
                 },
                 {
                     name: "created_at",

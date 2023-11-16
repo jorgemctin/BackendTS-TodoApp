@@ -1,10 +1,8 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { AuthRequest } from '../types';
 
-export interface AuthRequest extends Request {
-    userId?: number;
-    userName?: string;
-}
+//VERIFY USER
 const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
     try {
         const bearerToken = req.headers.authorization;
@@ -20,11 +18,10 @@ const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
 
         const decoded: any = jwt.verify(token, 'secreto');
 
-        req.userId = decoded.id;
-        req.userName = decoded.userName;
-
-        console.log("req.userId:", req.userId);
-
+        req.user_id = decoded.id;
+        req.user_name = decoded.user_name;
+        req.role = decoded.role;
+        
         next();
     } catch (error: any) {
         return res.status(500).json(

@@ -14,7 +14,7 @@ Este proyecto consiste en desarrollar una API que brinde servicios de autenticac
 
 ### Diagrama BD
 
-!['diagram'](./public/img/diagram.png)
+!['diagram'](./public/images/diagram.png)
 
 ### Instalación en local
 
@@ -34,7 +34,7 @@ Este proyecto consiste en desarrollar una API que brinde servicios de autenticac
 
 * POST - Crear Todo.
 * GET - Ver mis Todo's.
-* POST - Actualizar Todo's.
+* PUT - Actualizar Todo's.
 * DELETE - Borrar Todo.
 
 #### Autor

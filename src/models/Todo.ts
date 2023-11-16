@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BaseEntity, ManyToOne } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, JoinColumn, UpdateDateColumn, BaseEntity, ManyToOne } from "typeorm";
 import { User } from "./User";
 
 @Entity("todos")
@@ -12,8 +12,8 @@ export class Todo extends BaseEntity {
     @Column()
     completed: boolean;
 
-    @Column({ name: "userId" })
-    userId: number;
+    @Column()
+    user_id: number;
 
     @CreateDateColumn({ name: "created_at" })
     createdAt: Date;
@@ -25,6 +25,6 @@ export class Todo extends BaseEntity {
         onDelete: "CASCADE",
         onUpdate: "CASCADE"
     })
-
+    @JoinColumn({ name: "user_id" }) 
     user: User;
 }

@@ -2,11 +2,12 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User";
 import { Request, Response } from "express";
-import { AuthPayload } from "../../types";
+import { AuthPayload } from "../types";
 import { FindOneOptions } from 'typeorm';
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
 
+// REGISTER 
 export const register = async (req: Request, res: Response) => {
     
     try {
@@ -25,6 +26,7 @@ export const register = async (req: Request, res: Response) => {
 
         const userRegistered = await User.create({
             ...req.body,
+            role: "user",
             password: encryptedPassword,
         }).save();
 
@@ -51,11 +53,12 @@ export const register = async (req: Request, res: Response) => {
     }
 };
 
+
+//LOGIN
 export const login = async (req: Request, res: Response) => {
     try {
         const { email, password } = req.body as AuthPayload;
         if (!email || !password) {
-            console.log("Datos de inicio de sesión incompletos.");
             return res.status(400).json({
                 success: false,
                 message: "Incomplete login data",
@@ -63,7 +66,6 @@ export const login = async (req: Request, res: Response) => {
         }
         const user = await User.findOne({ where: { email } });
         if (!user) {
-            console.log("Usuario no encontrado.");
             return res.status(401).json({
                 success: false,
                 message: "Invalid login credentials",
@@ -77,7 +79,12 @@ export const login = async (req: Request, res: Response) => {
                 message: "Invalid login credentials",
             });
         }
-        const token = jwt.sign({ userId: user.id }, JWT_SECRET, {
+        const token = jwt.sign
+        ({ 
+            userId: user.id 
+        }, 
+        JWT_SECRET, 
+        {
             expiresIn: "3h",
         });
         return res.status(200).json({
@@ -85,7 +92,7 @@ export const login = async (req: Request, res: Response) => {
             data: { user, token },
         });
     } catch (error) {
-        console.error("Error durante el inicio de sesión:", error);
+        console.error("Login error:", error);
         return res.status(500).json({
             success: false,
             error,
