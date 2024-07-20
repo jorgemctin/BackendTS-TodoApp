@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Todo } from '../models/Todo';
 import { AuthRequest } from '../types';
+import { isValidField, isValidTodoText } from '../service/useful';
 
 //GET ALL MY TODOS
 export const getAllMyTodos = async (req: AuthRequest, res: Response) => {
@@ -18,11 +19,10 @@ export const getAllMyTodos = async (req: AuthRequest, res: Response) => {
             todos,
             message: "Here are your Todos",
         });
-    } catch (error:any) {
-        console.error("Error:", error);
+    } catch (error) {
+        console.error('Error:', error);
         return res.status(500).json({
-            success: false,
-            error: error.message,
+            success: false, error
         });
     }
 };
@@ -32,6 +32,8 @@ export const createTodo = async (req: Request, res: Response) => {
     try {
         const { text, user_id, completed } = req.body;
 
+        if (!await isValidField(text, isValidTodoText, "The text must contain only letters, numbers, and spaces, and must not exceed 200 characters.", res)) return;
+
         const newTodo = Todo.create({
             text,
             user_id,
@@ -40,26 +42,14 @@ export const createTodo = async (req: Request, res: Response) => {
 
         await newTodo.save();
 
-        return res.status(201).json
-        ({ 
-            success: true, 
-            todo: newTodo 
+        return res.status(201).json({
+            success: true,
+            todo: newTodo
         });
-    } catch (error: any) {
+    } catch (error) {
         console.error('Error:', error);
-
-        if (error.name === 'ValidationError') {
-            return res.status(400).json
-            ({ 
-                success: false, 
-                error: 'Validation error', 
-                details: error.message 
-            });
-        }
-
-        return res.status(500).json
-        ({ 
-            success: false, error 
+        return res.status(500).json({
+            success: false, error
         });
     }
 };
@@ -77,25 +67,26 @@ export const updateTodo = async (req: Request, res: Response) => {
             relations: ['user']
         });
 
-        todo.text = text || todo.text;
-        todo.user_id = user_id !== undefined ? user_id : todo.user_id;
-        todo.completed = completed !== undefined ? completed : todo.completed; 
+        if (text) {
+            if (!await isValidField(text, isValidTodoText, "The text must contain only letters, numbers, and spaces, and must not exceed 200 characters.", res)) return;
+        }
+        
+        todo.text = text ?? todo.text;
+        todo.user_id = user_id ?? todo.user_id;
+        todo.completed = completed ?? todo.completed;
 
         await todo.save();
 
-        return res.status(200).json
-        ({ 
-            success: true, todo 
+        return res.status(200).json({
+            success: true, todo
         });
     } catch (error) {
         console.error('Error:', error);
-        return res.status(500).json
-        ({ 
-            success: false, error 
+        return res.status(500).json({
+            success: false, error,
         });
     }
 };
-
 
 //DELETE A TODO
 export const deleteTodo = async (req: Request, res: Response) => {
@@ -110,25 +101,23 @@ export const deleteTodo = async (req: Request, res: Response) => {
         });
 
         if (!todo) {
-            return res.status(404).json
-            ({ 
-                success: false, 
-                message: 'Todo not found' 
+            return res.status(404).json({
+                success: false,
+                message: 'Todo not found'
             });
         }
 
         await todo.remove();
 
-        return res.status(200).json
-        ({ 
-            success: true, 
-            message: 'Todo deleted successfully' 
+        return res.status(200).json({
+            success: true,
+            message: 'Todo deleted successfully'
         });
     } catch (error) {
         console.error('Error:', error);
-        return res.status(500).json
-        ({ 
-            success: false, error 
+        return res.status(500).json({
+            success: false, error
         });
     }
 };
+

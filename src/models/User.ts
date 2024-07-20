@@ -8,7 +8,7 @@ export class User extends BaseEntity {
     id: number;
 
     @Column({unique: true})
-    user_name: string;
+    username: string;
 
     @Column({unique: true})
     email: string;

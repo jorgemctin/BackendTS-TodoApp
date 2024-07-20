@@ -1,11 +1,11 @@
 import express from 'express';
 import { dataBase } from './db';
 import router from './router';
-
-require('dotenv').config();
+const cors = require('cors');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 
 app.use(router);

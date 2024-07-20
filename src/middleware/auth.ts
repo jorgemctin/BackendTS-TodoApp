@@ -19,7 +19,7 @@ const auth = async (req: AuthRequest, res: Response, next: NextFunction) => {
         const decoded: any = jwt.verify(token, 'secreto');
 
         req.user_id = decoded.id;
-        req.user_name = decoded.user_name;
+        req.username = decoded.username;
         req.role = decoded.role;
         
         next();

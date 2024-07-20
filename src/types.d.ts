@@ -1,8 +1,14 @@
 import { Request } from 'express';
 
-//DEFINE AuthPayload INTERFACE
-export interface AuthPayload {
-    user_name?: string;
+//DEFINE AuthPayloadRegister INTERFACE
+export interface AuthPayloadRegister {
+    username: string;
+    email: string;
+    password: string;
+}
+
+//DEFINE AuthPayloadLogin INTERFACE
+export interface AuthPayloadLogin {
     email: string;
     password: string;
 }
@@ -10,7 +16,7 @@ export interface AuthPayload {
 //EXTEND Request INTERFACE TO INCLUDE AuthRequest
 export interface AuthRequest extends Request {
     user_id?: number;
-    user_name?: string;
+    username?: string;
     role?: string;
 }
 
@@ -18,4 +24,8 @@ export interface AuthRequest extends Request {
 export interface UserRole {
     user: "user";
     admin: "admin";
+}
+
+export interface CustomError extends Error {
+    status?: number;
 }

@@ -2,25 +2,35 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { User } from "../models/User";
 import { Request, Response } from "express";
-import { AuthPayload } from "../types";
-import { FindOneOptions } from 'typeorm';
+import { AuthPayloadLogin, AuthPayloadRegister, } from "../types";
+import {
+    checkLoginData,
+    // isPasswordCorrect,
+    // isPasswordCorrectValidator,
+    isValidField,
+    isValidUsername,
+    userExistsByEmail,
+    userFoundByEmail,
+    userFoundByUsername,
+    validateEmail,
+    validatePassword,
+    // validateEmailAndPassword
+} from "../service/useful";
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
 
 // REGISTER 
 export const register = async (req: Request, res: Response) => {
-    
+
     try {
-        const {  email, password } = req.body as AuthPayload;
+        const { email, password, username } = req.body as AuthPayloadRegister;
 
-        const userFound = await User.findOne({ where: { email } } as FindOneOptions<User>);
-
-        if (userFound) {
-            return res.status(200).json({
-                success: true,
-                message: "A user is already registered with that email address."
-            });
-        }
+        // Validations
+        if (!await isValidField(email, validateEmail, "Invalid email format", res)) return;
+        if (!await isValidField(username, isValidUsername, "Username must be a maximum of 12 characters", res)) return;
+        if (!await isValidField(password, (pw) => pw.length >= 6, "Password must be longer than 6 characters", res)) return;
+        if (!await isValidField(email, userFoundByEmail, "A user is already registered with that email address.", res)) return;
+        if (!await isValidField(username, userFoundByUsername, "The username is already in use.", res)) return;
 
         const encryptedPassword = await bcrypt.hash(password, 10);
 
@@ -30,7 +40,9 @@ export const register = async (req: Request, res: Response) => {
             password: encryptedPassword,
         }).save();
 
-        const token = jwt.sign({ userId: userRegistered.id }, JWT_SECRET, {
+        const token = jwt.sign({
+            userId: userRegistered.id
+        }, JWT_SECRET, {
             expiresIn: "3h",
         });
 
@@ -38,64 +50,52 @@ export const register = async (req: Request, res: Response) => {
             success: true,
             message: "User registered successfully",
             userRegistered: {
-                userName: userRegistered.userName,
+                username: userRegistered.username,
                 email: userRegistered.email,
+                userId: userRegistered.id,
+                role: userRegistered.role,
             },
             token,
         });
 
-    } catch (error) {
-        console.error("Error:", error);
+    } catch (error: any) {
+        console.error("Error:", error.message);
         return res.status(500).json({
             success: false,
-            error
+            message: "User cant be created",
+            error: error.message,
         });
     }
 };
 
-
 //LOGIN
 export const login = async (req: Request, res: Response) => {
     try {
-        const { email, password } = req.body as AuthPayload;
-        if (!email || !password) {
-            return res.status(400).json({
-                success: false,
-                message: "Incomplete login data",
-            });
-        }
+        const { email, password } = req.body as AuthPayloadLogin;
+
+        //Validations
+        if (!checkLoginData(email, password, res)) return; 
+        await isValidField(email, userExistsByEmail, "Invalid login credentials");
         const user = await User.findOne({ where: { email } });
-        if (!user) {
-            return res.status(401).json({
-                success: false,
-                message: "Invalid login credentials",
-            });
-        }
-        const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if (!isPasswordCorrect) {
-            console.log("Contraseña incorrecta.");
-            return res.status(401).json({
-                success: false,
-                message: "Invalid login credentials",
-            });
-        }
-        const token = jwt.sign
-        ({ 
-            userId: user.id 
-        }, 
-        JWT_SECRET, 
-        {
+        if (!user || !(await validatePassword(password, user.password, res))) return;
+        
+        const token = jwt.sign({
+            userId: user.id
+        },
+            JWT_SECRET, {
             expiresIn: "3h",
         });
         return res.status(200).json({
             success: true,
+            message: "User logged succesfully",
             data: { user, token },
         });
-    } catch (error) {
+    } catch (error: any) {
         console.error("Login error:", error);
         return res.status(500).json({
             success: false,
-            error,
+            message: "users cant be logged",
+            error: error.message,
         });
     }
 };
