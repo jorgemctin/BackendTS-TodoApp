@@ -1,8 +1,8 @@
 import express from 'express';
 import { dataBase } from './db';
 import router from './router';
-const cors = require('cors');
-
+import cors from 'cors';
+import 'dotenv/config';
 const app = express();
 
 app.use(cors());

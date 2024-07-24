@@ -4,17 +4,13 @@ import { DataSource } from "typeorm";
 import { CreateUserTable1699638990563 } from "./migrations/1699638990563-CreateUserTable";
 import { CreateTodoTable1699639156136 } from "./migrations/1699639156136-CreateTodoTable";
 
-require("dotenv").config();
-
-const { MYSQL_HOST, MYSQL_PORT, MYSQL_USERNAME, MYSQL_PASSWORD } = process.env;
-
 export const dataBase = new DataSource({
     type: "mysql",
-    database: "todoApp",
-    host: MYSQL_HOST,
-    port: + (MYSQL_PORT as string),
-    username: MYSQL_USERNAME,
-    password: MYSQL_PASSWORD,
+    host: process.env.MYSQL_ADDON_HOST,
+    port: parseInt(process.env.PORT as string, 10),
+    username: process.env.MYSQL_ADDON_USER,
+    password: process.env.MYSQL_ADDON_PASSWORD,
+    database: process.env.MYSQL_ADDON_DB,
     migrations: [
         CreateUserTable1699638990563,
         CreateTodoTable1699639156136,

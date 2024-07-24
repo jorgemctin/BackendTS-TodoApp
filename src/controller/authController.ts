@@ -5,8 +5,6 @@ import { Request, Response } from "express";
 import { AuthPayloadLogin, AuthPayloadRegister, } from "../types";
 import {
     checkLoginData,
-    // isPasswordCorrect,
-    // isPasswordCorrectValidator,
     isValidField,
     isValidUsername,
     userExistsByEmail,
@@ -14,7 +12,6 @@ import {
     userFoundByUsername,
     validateEmail,
     validatePassword,
-    // validateEmailAndPassword
 } from "../service/useful";
 
 const JWT_SECRET = process.env.JWT_SECRET || "";
@@ -75,7 +72,7 @@ export const login = async (req: Request, res: Response) => {
 
         //Validations
         if (!checkLoginData(email, password, res)) return; 
-        await isValidField(email, userExistsByEmail, "Invalid login credentials");
+        await isValidField(email, userExistsByEmail, "Invalid email");
         const user = await User.findOne({ where: { email } });
         if (!user || !(await validatePassword(password, user.password, res))) return;
         

@@ -12,6 +12,9 @@
 
 Este proyecto consiste en desarrollar una API que brinde servicios de autenticación, registro y inicio de sesión para los usuarios. Además, ofrece operaciones CRUD (Crear, Leer, Actualizar, Eliminar) para gestionar tareas almacenadas en una tabla de "Todos".
 
+##### Credenciales:
+user@user.com - Hola1234
+
 ### Diagrama BD
 
 !['diagram'](./public/images/diagram.png)

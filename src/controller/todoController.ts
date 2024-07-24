@@ -22,7 +22,8 @@ export const getAllMyTodos = async (req: AuthRequest, res: Response) => {
     } catch (error) {
         console.error('Error:', error);
         return res.status(500).json({
-            success: false, error
+            success: false, error,
+            message: error
         });
     }
 };
@@ -32,7 +33,7 @@ export const createTodo = async (req: Request, res: Response) => {
     try {
         const { text, user_id, completed } = req.body;
 
-        if (!await isValidField(text, isValidTodoText, "The text must contain only letters, numbers, and spaces, and must not exceed 200 characters.", res)) return;
+        if (!await isValidField(text, isValidTodoText, "The text can include letters, numbers, spaces, and . _ - ? ! ¡ ¿, up to 200 characters.", res)) return;
 
         const newTodo = Todo.create({
             text,
@@ -68,7 +69,7 @@ export const updateTodo = async (req: Request, res: Response) => {
         });
 
         if (text) {
-            if (!await isValidField(text, isValidTodoText, "The text must contain only letters, numbers, and spaces, and must not exceed 200 characters.", res)) return;
+            if (!await isValidField(text, isValidTodoText, "The text can include letters, numbers, spaces, and . _ - ? ! ¡ ¿, up to 200 characters.", res)) return;
         }
         
         todo.text = text ?? todo.text;
@@ -120,4 +121,3 @@ export const deleteTodo = async (req: Request, res: Response) => {
         });
     }
 };
-

@@ -72,4 +72,4 @@ export const userExistsByEmail = async (email: string): Promise<boolean> =>
 //TODO
 //Todo text
 export const isValidTodoText = (text: string): boolean =>
-    /^[a-zA-Z0-9._\-?!¡¿]{1,200}$/.test(text);
+    /^[a-zA-Z0-9._\-?!¡¿ ]{1,200}$/.test(text);
